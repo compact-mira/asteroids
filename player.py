@@ -8,7 +8,13 @@ class Player(CircleShape):
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
         self.shoot_timer = 0
-    
+
+        self.image = pygame.image.load("rd.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image, (100, 50))
+        self.original_image = self.image
+        self.rect = self.image.get_rect()
+
+
     def triangle(self):
         forward = pygame.Vector2(0,1).rotate(self.rotation)
         right = pygame.Vector2(0,1).rotate(self.rotation + 90) * self.radius / 1.5
@@ -18,10 +24,15 @@ class Player(CircleShape):
         return [a, b, c]
     
     def draw(self, screen):
-        pygame.draw.polygon(screen, "white", self.triangle(), 2)
+
+        self.rect.center = self.position
+        screen.blit(self.image, self.rect)
+        # pygame.draw.polygon(screen, "white", self.triangle(), 2)
 
     def update(self, dt):
         keys = pygame.key.get_pressed()
+        self.image = pygame.transform.rotate(self.original_image, -self.rotation)
+
 
         if keys[pygame.K_a]:
             self.rotate(-dt)
